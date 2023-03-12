@@ -5,5 +5,6 @@
 
 ## Tech Used
 - [ExpressJS](https://expressjs.com/)
+- [Mongoose](https://mongoosejs.com/)
 - [NodeJS](https://nodejs.org/en/)
 - [NPM](https://www.npmjs.com/)
