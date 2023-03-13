@@ -38,9 +38,12 @@ app.post('/api/posts', (req, res, next) => {
     });
     // * Mongoose: collection name = plural form of model name
     post.save()
-    res.status(201).json({
-        message: 'Post added successfully'
-    });
+        .then(result => {
+            res.status(201).json({
+                message: 'Post added successfully',
+                createdId: result._id
+            });
+        });
 });
 
 app.get('/api/posts', (req, res, next) => {
