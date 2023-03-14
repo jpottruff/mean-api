@@ -72,6 +72,15 @@ app.get('/api/posts', (req, res, next) => {
         .catch(err => console.error(`Error getting docs: ${err}`))
 });
 
+app.get('/api/posts/:id', (req, res, next) => {
+    Post.findById(req.params.id)
+        .then(document => {
+            document
+                ? res.status(200).json({message: 'Post found', post: document})
+                : res.status(404).json({message: 'Post not found'})
+        })
+})
+
 app.delete('/api/posts/:id', (req, res, next) => {
     Post.deleteOne({_id: req.params.id})
         .then(result => {
