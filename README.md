@@ -6,5 +6,6 @@
 ## Tech Used
 - [ExpressJS](https://expressjs.com/)
 - [Mongoose](https://mongoosejs.com/)
+- [Multer](https://github.com/expressjs/multer)
 - [NodeJS](https://nodejs.org/en/)
 - [NPM](https://www.npmjs.com/)
