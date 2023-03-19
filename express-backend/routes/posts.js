@@ -12,6 +12,7 @@ router.post('', (req, res, next) => {
     // * Mongoose: collection name = plural form of model name
     post.save()
         .then(result => {
+            console.log('Post saved', result)
             res.status(201).json({
                 message: 'Post added successfully',
                 createdId: result._id
@@ -29,7 +30,7 @@ router.put('/:id', (req, res, next) => {
     });
     Post.updateOne({ _id: req.params.id }, post)
         .then(result => {
-            console.log(result);
+            console.log('Updated post', result);
             res.status(200).json({ message: 'Post updated successfully'})
         });
 });
@@ -37,6 +38,7 @@ router.put('/:id', (req, res, next) => {
 router.get('', (req, res, next) => {
     Post.find()
         .then(documents => {
+            console.log('Retrieved posts');
             res.status(200).json({
                 message: 'Posts successfully fetched',
                 posts: documents
@@ -48,6 +50,7 @@ router.get('', (req, res, next) => {
 router.get('/:id', (req, res, next) => {
     Post.findById(req.params.id)
         .then(document => {
+            console.log(`Retrived post by id: ${req.params.id}`);
             document
                 ? res.status(200).json({message: 'Post found', post: document})
                 : res.status(404).json({message: 'Post not found'})
@@ -57,7 +60,7 @@ router.get('/:id', (req, res, next) => {
 router.delete('/:id', (req, res, next) => {
     Post.deleteOne({_id: req.params.id})
         .then(result => {
-            console.log(result);
+            console.log('Delete successful', result);
             res.status(200).json({message: 'Post deleted'});
         });
 });
