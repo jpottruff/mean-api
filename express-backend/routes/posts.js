@@ -25,9 +25,11 @@ const Post = require('../models/post');
 
 // NOTE: `image` needs to line up with the property being passed from the front end
 router.post('', multer({storage: storageConfig}).single('image'), (req, res, next) => {
+    const serverUrl = `${req.protocol}://${req.get('host')}`;
     const post = new Post({
         title: req.body.title,
         content: req.body.content,
+        imagePath: `${serverUrl}/express-backend/images/${req.file.filename}`
     });
     // * Mongoose: collection name = plural form of model name
     post.save()
@@ -35,7 +37,10 @@ router.post('', multer({storage: storageConfig}).single('image'), (req, res, nex
             console.log('Post saved', result)
             res.status(201).json({
                 message: 'Post added successfully',
-                createdId: result._id
+                post: {
+                    ...result,
+                    id: result._id,
+                }
             });
         });
 });
