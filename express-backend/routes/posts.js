@@ -63,6 +63,7 @@ router.put('/:id', multer({storage: storageConfig}).single('image'), (req, res, 
         content: req.body.content,
         imagePath
     });
+
     Post.updateOne({ _id: req.params.id }, post)
         .then(result => {
             console.log('Post updated', result);
@@ -79,7 +80,17 @@ router.put('/:id', multer({storage: storageConfig}).single('image'), (req, res, 
 });
 
 router.get('', (req, res, next) => {
-    Post.find()
+    console.log(req.query)
+    // NOTE: query comes in as a string - `+` coverts to number
+    const pageSize = +req.query.pageSize;
+    const page = +req.query.page;
+    const postQuery = Post.find();
+    if (pageSize && page) {
+        postQuery.skip(pageSize * (page - 1));
+        postQuery.limit(pageSize)
+    }
+
+    postQuery
         .then(documents => {
             console.log('Retrieved posts');
             res.status(200).json({
