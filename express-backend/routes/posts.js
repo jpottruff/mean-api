@@ -29,7 +29,7 @@ router.post('', multer({storage: storageConfig}).single('image'), (req, res, nex
     const post = new Post({
         title: req.body.title,
         content: req.body.content,
-        imagePath: `${serverUrl}/express-backend/images/${req.file.filename}`
+        imagePath: `${serverUrl}/images/${req.file.filename}`
     });
     // * Mongoose: collection name = plural form of model name
     post.save()
