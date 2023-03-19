@@ -26,10 +26,11 @@ const Post = require('../models/post');
 // NOTE: `image` needs to line up with the property being passed from the front end
 router.post('', multer({storage: storageConfig}).single('image'), (req, res, next) => {
     const serverUrl = `${req.protocol}://${req.get('host')}`;
+    const url = `${serverUrl}/images/${req.file.filename}`;
     const post = new Post({
         title: req.body.title,
         content: req.body.content,
-        imagePath: `${serverUrl}/images/${req.file.filename}`
+        imagePath: url
     });
     // * Mongoose: collection name = plural form of model name
     post.save()
@@ -46,17 +47,34 @@ router.post('', multer({storage: storageConfig}).single('image'), (req, res, nex
 });
 
 // * PUT = completely replace a resource | PATCH = only update a resource with new values;
-// router.patch('/api/posts', (req, res, next) => {
-router.put('/:id', (req, res, next) => { 
+router.put('/:id', multer({storage: storageConfig}).single('image'), (req, res, next) => { 
+    
+    // * Check for new file upload
+    let imagePath = req.body.imagePath;
+    if (req.file) {
+        const serverUrl = `${req.protocol}://${req.get('host')}`;
+        const url = `${serverUrl}/images/${req.file.filename}`;
+        imagePath = url;
+    }
+
     const post = new Post({
         _id: req.body.id,
         title: req.body.title,
-        content: req.body.content
+        content: req.body.content,
+        imagePath
     });
     Post.updateOne({ _id: req.params.id }, post)
         .then(result => {
-            console.log('Updated post', result);
-            res.status(200).json({ message: 'Post updated successfully'})
+            console.log('Post updated', result);
+            res.status(200).json({ 
+                message: 'Post updated successfully',
+                post: {
+                    id: req.body.id,
+                    title: req.body.title,
+                    content: req.body.content,
+                    imagePath
+                }
+            })
         });
 });
 
