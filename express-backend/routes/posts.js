@@ -80,7 +80,6 @@ router.put('/:id', multer({storage: storageConfig}).single('image'), (req, res, 
 });
 
 router.get('', (req, res, next) => {
-    console.log(req.query)
     // NOTE: query comes in as a string - `+` coverts to number
     const pageSize = +req.query.pageSize;
     const page = +req.query.page;
@@ -90,12 +89,20 @@ router.get('', (req, res, next) => {
         postQuery.limit(pageSize)
     }
 
+    let fetchedPosts;
     postQuery
         .then(documents => {
             console.log('Retrieved posts');
+            fetchedPosts = documents;
+            return Post.count();
+        })
+        .then(count => {
+            console.log('Counted documents');
+
             res.status(200).json({
                 message: 'Posts successfully fetched',
-                posts: documents
+                posts: fetchedPosts,
+                totalPosts: count
             });
         })
         .catch(err => console.error(`Error getting docs: ${err}`))
