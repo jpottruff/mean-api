@@ -40,7 +40,6 @@ router.post("/login", (req, res, next) => {
             return bcrypt.compare(req.body.password, user.password)
         })
         .then(compareResult => {
-            console.log(fetchedUser, fetchedUser.email, fetchedUser._id)
             if (!compareResult) {
                 console.log('Auth failed. Wrong password')
                 return res.status(401).json({message: 'Auth failed. Wrong password'});
