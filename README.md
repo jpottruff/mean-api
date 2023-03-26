@@ -5,6 +5,7 @@
 
 ## Tech Used
 - [ExpressJS](https://expressjs.com/)
+- [JSON Web Token](https://www.npmjs.com/package/jsonwebtoken)
 - [Mongoose](https://mongoosejs.com/)
 - [Multer](https://github.com/expressjs/multer)
 - [NodeJS](https://nodejs.org/en/)
