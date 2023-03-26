@@ -1,6 +1,8 @@
 const express = require('express');
 const multer = require('multer');
 
+const authCheck = require('../middleware/auth-check');
+
 const router = express.Router();
 
 const MIME_TYPE_MAP = {
@@ -24,59 +26,66 @@ const storageConfig = multer.diskStorage({
 const Post = require('../models/post');
 
 // NOTE: `image` needs to line up with the property being passed from the front end
-router.post('', multer({storage: storageConfig}).single('image'), (req, res, next) => {
-    const serverUrl = `${req.protocol}://${req.get('host')}`;
-    const url = `${serverUrl}/images/${req.file.filename}`;
-    const post = new Post({
-        title: req.body.title,
-        content: req.body.content,
-        imagePath: url
-    });
-    // * Mongoose: collection name = plural form of model name
-    post.save()
-        .then(result => {
-            console.log('Post saved', result)
-            res.status(201).json({
-                message: 'Post added successfully',
-                post: {
-                    ...result,
-                    id: result._id,
-                }
-            });
+router.post(
+    '', 
+    authCheck,
+    multer({storage: storageConfig}).single('image'), 
+    (req, res, next) => {
+        const serverUrl = `${req.protocol}://${req.get('host')}`;
+        const url = `${serverUrl}/images/${req.file.filename}`;
+        const post = new Post({
+            title: req.body.title,
+            content: req.body.content,
+            imagePath: url
         });
+        // * Mongoose: collection name = plural form of model name
+        post.save()
+            .then(result => {
+                console.log('Post saved', result)
+                res.status(201).json({
+                    message: 'Post added successfully',
+                    post: {
+                        ...result,
+                        id: result._id,
+                    }
+                });
+            });
 });
 
 // * PUT = completely replace a resource | PATCH = only update a resource with new values;
-router.put('/:id', multer({storage: storageConfig}).single('image'), (req, res, next) => { 
-    
-    // * Check for new file upload
-    let imagePath = req.body.imagePath;
-    if (req.file) {
-        const serverUrl = `${req.protocol}://${req.get('host')}`;
-        const url = `${serverUrl}/images/${req.file.filename}`;
-        imagePath = url;
-    }
+router.put(
+    '/:id', 
+    authCheck,
+    multer({storage: storageConfig}).single('image'), 
+    (req, res, next) => {     
+        // * Check for new file upload
+        let imagePath = req.body.imagePath;
+        if (req.file) {
+            const serverUrl = `${req.protocol}://${req.get('host')}`;
+            const url = `${serverUrl}/images/${req.file.filename}`;
+            imagePath = url;
+        }
 
-    const post = new Post({
-        _id: req.body.id,
-        title: req.body.title,
-        content: req.body.content,
-        imagePath
-    });
-
-    Post.updateOne({ _id: req.params.id }, post)
-        .then(result => {
-            console.log('Post updated', result);
-            res.status(200).json({ 
-                message: 'Post updated successfully',
-                post: {
-                    id: req.body.id,
-                    title: req.body.title,
-                    content: req.body.content,
-                    imagePath
-                }
-            })
+        const post = new Post({
+            _id: req.body.id,
+            title: req.body.title,
+            content: req.body.content,
+            imagePath
         });
+
+        Post.updateOne({ _id: req.params.id }, post)
+            .then(result => {
+                console.log('Post updated', result);
+                res.status(200).json({ 
+                    message: 'Post updated successfully',
+                    post: {
+                        id: req.body.id,
+                        title: req.body.title,
+                        content: req.body.content,
+                        imagePath
+                    }
+                })
+            });
 });
 
 router.get('', (req, res, next) => {
@@ -118,12 +127,15 @@ router.get('/:id', (req, res, next) => {
         })
 });
 
-router.delete('/:id', (req, res, next) => {
-    Post.deleteOne({_id: req.params.id})
-        .then(result => {
-            console.log('Delete successful', result);
-            res.status(200).json({message: 'Post deleted'});
-        });
+router.delete(
+    '/:id', 
+    authCheck,
+    (req, res, next) => {
+        Post.deleteOne({_id: req.params.id})
+            .then(result => {
+                console.log('Delete successful', result);
+                res.status(200).json({message: 'Post deleted'});
+            });
 });
 
 module.exports = router;
