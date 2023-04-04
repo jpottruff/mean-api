@@ -74,18 +74,23 @@ router.put(
             imagePath
         });
 
-        Post.updateOne({ _id: req.params.id }, post)
+        Post.updateOne({ _id: req.params.id, creator: req.userData.userId }, post)
             .then(result => {
                 console.log('Post updated', result);
-                res.status(200).json({ 
-                    message: 'Post updated successfully',
-                    post: {
-                        id: req.body.id,
-                        title: req.body.title,
-                        content: req.body.content,
-                        imagePath
-                    }
-                })
+                if (result.modifiedCount > 0) {
+                    res.status(200).json({ 
+                        message: 'Post updated successfully',
+                        post: {
+                            id: req.body.id,
+                            title: req.body.title,
+                            content: req.body.content,
+                            imagePath
+                        }
+                    });
+                } else {
+                    console.log('Not authorized to update post or post not found')
+                    res.status(401).json({ message: 'Not authorized to update post' })
+                }
             });
 });
 
@@ -132,10 +137,15 @@ router.delete(
     '/:id', 
     authCheck,
     (req, res, next) => {
-        Post.deleteOne({_id: req.params.id})
+        Post.deleteOne({_id: req.params.id, creator: req.userData.userId })
             .then(result => {
-                console.log('Delete successful', result);
-                res.status(200).json({message: 'Post deleted'});
+                if (result.deletedCount > 0) {
+                    console.log('Delete successful', result);
+                    res.status(200).json({message: 'Post deleted'});
+                } else {
+                    console.log('Not authorized to delete post or post not found')
+                    res.status(401).json({ message: 'Not authorized to delete post' })
+                }
             });
 });
 
