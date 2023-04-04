@@ -36,7 +36,8 @@ router.post(
         const post = new Post({
             title: req.body.title,
             content: req.body.content,
-            imagePath: url
+            imagePath: url,
+            creator: req.userData.userId
         });
         // * Mongoose: collection name = plural form of model name
         post.save()
