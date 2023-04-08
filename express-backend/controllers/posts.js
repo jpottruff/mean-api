@@ -73,7 +73,7 @@ exports.createPost = (req, res, next) => {
         })
 };
 
-exports.updatePost =     (req, res, next) => {     
+exports.updatePost = (req, res, next) => {     
     // * Check for new file upload
     let imagePath = req.body.imagePath;
     if (req.file) {
@@ -92,7 +92,7 @@ exports.updatePost =     (req, res, next) => {
     Post.updateOne({ _id: req.params.id, creator: req.userData.userId }, post)
         .then(result => {
             console.log('Post updated', result);
-            if (result.modifiedCount > 0) {
+            if (result.matchedCount > 0) {
                 res.status(200).json({ 
                     message: 'Post updated successfully',
                     post: {
