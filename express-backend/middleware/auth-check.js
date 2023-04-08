@@ -5,7 +5,7 @@ module.exports = (req, res, next) => {
         // splits 'Bearer myTokenString' => ['Bearer', 'myTokenString']
         const token = req.headers.authorization.split(' ')[1];
         // pass along with the request so info can be used (eg. in create post)
-        const decodedToken = jwt.verify(token, 'super_secret_hash_validator_that_should_be_longer_but_this_is_a_demo');
+        const decodedToken = jwt.verify(token, process.env.JWT_KEY);
         req.userData = { email: decodedToken.email, userId: decodedToken.userId }
         next();
     } catch (err) {

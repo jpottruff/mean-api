@@ -43,7 +43,7 @@ exports.loginUser = (req, res, next) => {
 
             const token = jwt.sign(
                 {email: fetchedUser.email, userId: fetchedUser._id}, 
-                'super_secret_hash_validator_that_should_be_longer_but_this_is_a_demo',
+                process.env.JWT_KEY,
                 {expiresIn: '1h'}
             );
             

@@ -1,0 +1,12 @@
+{
+    "env": {
+        "MONGO_USER": "root",
+        "MONGO_PW": "example",
+        "MONGO_SERVER": "localhost",
+        "MONGO_PORT": "27017",
+        "MONGO_OPTS": "serverSelectionTimeoutMS=5000&connectTimeoutMS=10000&authSource=admin&authMechanism=SCRAM-SHA-256",
+        
+        "DB_NAME": "mean-db",
+        "JWT_KEY": "super_secret_hash_validator_that_should_be_longer_but_this_is_a_demo"
+    }
+}
