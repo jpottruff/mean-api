@@ -10,6 +10,6 @@ module.exports = (req, res, next) => {
         next();
     } catch (err) {
         console.log('Auth check failed.')
-        res.status(401).json({ message: 'Auth failed', error: err })
+        res.status(401).json({ message: 'You are not authenticated', error: err })
     }
 }

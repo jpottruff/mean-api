@@ -50,7 +50,11 @@ router.post(
                         id: result._id,
                     }
                 });
-            });
+            })
+            .catch(err => {
+                console.log('Error creating post')
+                res.status(500).json({ message: 'Creating a post failed', error: err })
+            })
 });
 
 // * PUT = completely replace a resource | PATCH = only update a resource with new values;
@@ -92,6 +96,10 @@ router.put(
                     console.log('Not authorized to update post or post not found')
                     res.status(401).json({ message: 'Not authorized to update post' })
                 }
+            })
+            .catch(err => {
+                console.log('Error updating post')
+                res.status(500).json({ message: 'Could not update post', error: err})
             });
 });
 
@@ -121,7 +129,10 @@ router.get('', (req, res, next) => {
                 totalPosts: count
             });
         })
-        .catch(err => console.error(`Error getting docs: ${err}`))
+        .catch(err => {
+            console.error(`Error getting docs: ${err}`)
+            res.status(500).json({ message: 'Fetching posts failed', error: err });
+        });
 });
 
 router.get('/:id', (req, res, next) => {
@@ -132,6 +143,10 @@ router.get('/:id', (req, res, next) => {
                 ? res.status(200).json({message: 'Post found', post: document})
                 : res.status(404).json({message: 'Post not found'})
         })
+        .catch(err => {
+            console.log(`Could not get post ${req.params.id}`);
+            res.status(500).json({ message: `Fetching post ${req.params.id} failed`, error: err });
+        }) 
 });
 
 router.delete(
@@ -147,6 +162,10 @@ router.delete(
                     console.log('Not authorized to delete post or post not found')
                     res.status(401).json({ message: 'Not authorized to delete post' })
                 }
+            })
+            .catch(err => {
+                console.log(`Error deleting post ${req.params.id}`)
+                res.status(500).json({ message: `Deleting post ${req.params.id} failed`, error: err });
             });
 });
 
