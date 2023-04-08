@@ -8,7 +8,7 @@ const userRoutes = require('./routes/user');
 
 const app = express();
 
-const DATABASE_NAME = process.env.DB_NAME;
+const DATABASE_NAME = 'mean-db';
 const DATABASE_URI = `mongodb://${process.env.MONGO_USER}:${process.env.MONGO_PW}@${process.env.MONGO_SERVER}:${process.env.MONGO_PORT}/${DATABASE_NAME}?${process.env.MONGO_OPTS}`;
 mongoose.connect(DATABASE_URI)
     .then(() => console.log('DB connected...'))
