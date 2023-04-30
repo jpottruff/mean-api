@@ -10,3 +10,6 @@
 - [Multer](https://github.com/expressjs/multer)
 - [NodeJS](https://nodejs.org/en/)
 - [NPM](https://www.npmjs.com/)
+
+## Note on Mongo
+Mongo DB was run in a standard [Mongo Docker Container](https://hub.docker.com/_/mongo). Adjust credentials, opts, etc. in `nodemon.json` to your environment.
